@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.100.114.188:3306/blog?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: Qw-863&117*631#
+
+server:
+  port: 8080
+mybatis:
+  type-aliases-package: com.lrm.po
+  mapper-locations: classpath:com.lrm.dao/*.xml
+
+logging:
+  level:
+    root: info
+    com.lrm: debug
+  file: log/blog-dev.log
+
+
+

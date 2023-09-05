@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.lrm.dao.TypeRepository">
+    <!--一、增-->
+    <!--1.1插入一个分类-->
+    <insert id="save" parameterType="type">
+        insert into t_type(name)
+        values (#{name})
+    </insert>
+
+    <!--二、删-->
+    <!--2.1根据id删除一个分类-->
+    <delete id="delete">
+        delete
+        from t_type
+        where id = #{id}
+    </delete>
+
+    <!--三、改-->
+    <!--3.1根据id修改一个分类-->
+    <update id="update" parameterType="type">
+        update t_type
+        set name = #{name}
+        where id = #{id}
+    </update>
+
+    <!--四、查-->
+    <!--4.1根据id查找一个分类-->
+    <select id="findOne" resultType="type">
+        select *
+        from t_type
+        where id = #{id}
+    </select>
+    <!--4.2根据name查找一个分类-->
+    <select id="findByName" resultType="type">
+        select *
+        from t_type
+        where name = #{name}
+    </select>
+    <!--4.3查找所有分类-->
+    <select id="findAll" resultType="type">
+        select *
+        from t_type
+    </select>
+    <!--4.4查找展示再首页的分类，个数由size控制-->
+    <select id="findTop" resultMap="getType">
+        SELECT type_id,
+               COUNT(type_id) type_count,
+               t.name
+
+        FROM t_blog b
+                 JOIN
+             t_type t
+        WHERE b.type_id = t.id
+        GROUP BY type_id
+        ORDER BY type_count
+                DESC LIMIT #{size};
+    </select>
+    <resultMap id="getType" type="type">
+        <result property="id" column="type_id"></result>
+        <result property="name" column="name"></result>
+        <result property="typeCount" column="type_count"></result>
+    </resultMap>
+
+
+</mapper>

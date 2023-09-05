@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.lrm.dao.TagRepository">
+    <insert id="save" parameterType="tag">
+        insert into t_tag(name) values(#{name})
+    </insert>
+
+    <select id="findOne" resultType="tag">
+        select * from t_tag where id = #{id}
+    </select>
+
+    <select id="findByName" resultType="tag">
+        select * from t_tag where name = #{name}
+    </select>
+
+    <select id="findAll" resultType="tag">
+        select * from t_tag
+    </select>
+
+    <delete id="delete">
+        delete from t_tag where id = #{id}
+    </delete>
+    
+    <update id="update" parameterType="tag">
+        update t_tag set name = #{name} where id = #{id}
+    </update>
+
+    <select id="getTagListByStringArray" resultType="tag" parameterType="java.util.ArrayList">
+        select * from t_tag where id in
+        <foreach collection="array" item="i" open="(" close=")" separator=",">
+            #{i}
+        </foreach>
+    </select>
+    
+    <select id="getTagListByBlogId" resultMap="tags">
+        SELECT
+            tbt.tags_id ,tt.name
+        FROM
+            t_blog_tags  tbt
+                JOIN
+            t_tag tt
+        WHERE
+            tbt.tags_id = tt.id
+          AND
+            tbt.blogs_id = #{blogId};
+    </select>
+    <resultMap id="tags" type="tag">
+        <result column="tags_id" property="id"></result>
+        <result column="name" property="name"></result>
+    </resultMap>
+
+    <select id="findTop" resultMap="topTags">
+        SELECT tags_id,
+               COUNT(tags_id) tag_count,
+               t.name
+
+        FROM t_blog_tags bt
+                 JOIN
+             t_tag t
+        WHERE bt.tags_id = t.id
+        GROUP BY tags_id
+        ORDER BY tag_count DESC
+        limit #{size}
+    </select>
+
+    <resultMap id="topTags" type="tag">
+        <result column="tags_id" property="id"></result>
+        <result column="tag_count" property="tagCount"></result>
+        <result column="name" property="name"></result>
+    </resultMap>
+
+
+
+</mapper>
